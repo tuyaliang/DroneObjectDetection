@@ -65,7 +65,7 @@ class VisionRequestHandler(SimpleHTTPRequestHandler):
 
                 # detect with vision module
                 image = Image.open(data)
-                detect_results = vision.detect_image_web(image)
+                detect_results = vision.detect_image(image, isWeb=True)
 
                 # send the json result to client
                 self.send_json(detect_results)
@@ -100,7 +100,7 @@ class VisionRequestHandler(SimpleHTTPRequestHandler):
 
                 # detect with vision module
                 image = Image.open(image_data)
-                detect_results = vision.detect_image_web(image)
+                detect_results = vision.detect_image(image, isWeb=True)
 
                 # send the json result to client
                 self.send_json(detect_results)
@@ -181,5 +181,5 @@ def server_start():
     server_address = (SERVER_IP, SERVER_PORT)
     server = HTTPServer(server_address, VisionRequestHandler)
 
-    print("Vision Web Server Started Successfully,Please Visit:http://localhost:" + str(SERVER_PORT) + "/web-app/")
+    print("Vision Web Server Started Successfully,Please Visit:http://localhost:" + str(SERVER_PORT) + "/web_app/")
     server.serve_forever()

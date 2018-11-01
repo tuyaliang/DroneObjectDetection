@@ -59,7 +59,7 @@ class webCamera:
         print("Start at:%s" % time.strftime("%Y-%m-%d %H:%M:%S",
                                             time.localtime(time.time())))
         while 1:
-            time.sleep(0.05)
+            time.sleep(0.1)
             (grabbed, self.img) = camera.read()
             self.img = cv2.resize(self.img, self.resolution)  # self.img images
             if IS_COMPRESSED is True:

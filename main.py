@@ -1,36 +1,15 @@
 import argparse
 
-from vision import YOLO, detect_video, detect_camera,detect_img
-
+from vision import detect_video, detect_camera, detect_img, online_client, rtsp
+from settings import *
 
 FLAGS = None
 
 if __name__ == '__main__':
-    # class YOLO defines the default value, so suppress any default here
     parser = argparse.ArgumentParser(argument_default=argparse.SUPPRESS)
     '''
     Command line options
     '''
-    parser.add_argument(
-        '--model', type=str,
-        help='path to model weight file, default ' + YOLO.get_defaults("model_path")
-    )
-
-    parser.add_argument(
-        '--anchors', type=str,
-        help='path to anchor definitions, default ' + YOLO.get_defaults("anchors_path")
-    )
-
-    parser.add_argument(
-        '--classes', type=str,
-        help='path to class definitions, default ' + YOLO.get_defaults("classes_path")
-    )
-
-    parser.add_argument(
-        '--gpu_num', type=int,
-        help='Number of GPU to use, default ' + str(YOLO.get_defaults("gpu_num"))
-    )
-
     parser.add_argument(
         '--image', default=False, action="store_true",
         help='Image detection mode, will ignore all positional arguments, press Ctrl+C to stop.'
@@ -50,12 +29,22 @@ if __name__ == '__main__':
 
     parser.add_argument(
         '--cam', nargs='?', required=False,
-        help="[Optional] Using camera,default using built-in camera of laptop,press Q to stop."
+        help="[Optional] Using camera,by default using built-in camera of laptop,press Esc to stop."
     )
 
     parser.add_argument(
         '--web', nargs='?', required=False,
         help="[Optional] Using web server,press Ctrl+C to stop."
+    )
+
+    parser.add_argument(
+        '--online', nargs='?', required=False,
+        help="[Optional] Using a C/S structure system, will start a video stream detecting client. Please run "
+             "remote.py on the device with a camera and configure ip and port in settings.py first. Press Esc to stop."
+    )
+    parser.add_argument(
+        '--rtsp', nargs='?', required=False,
+        help="[Optional] Detect video stream from an IP camera or something else. Need rtsp address as argument."
     )
 
     FLAGS = parser.parse_args()
@@ -69,7 +58,11 @@ if __name__ == '__main__':
 #            print(" Ignoring remaining command line arguments: " + FLAGS.input + "," + FLAGS.output)
         detect_img()
     elif "cam" in FLAGS:
-        detect_camera(FLAGS.cam)
+        detect_camera(CAM_NUMBER)
+    elif "online" in FLAGS:
+        online_client()
+    elif "rtsp" in FLAGS:
+        rtsp(FLAGS.rtsp)
     elif "web" in FLAGS:
         from web_server import server_start
         server_start()
