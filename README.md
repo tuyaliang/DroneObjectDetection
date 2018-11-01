@@ -1,4 +1,4 @@
-#Visual Object Detect System
+# Visual Object Detect System
 Visual Object Detect System is a project based on Tensorflow, Keras, YOLOv3, also compiling some interesting stuffs such as detecting image on web page and a C/S remote monitor system.
 > Note:This is also my project to participate in the Wuliangchun Cup Competition in Electronics and Information Engineering Sclool of Sichuan University.Thanks to Professor Lei for providing necessary assistance.
 
@@ -6,8 +6,8 @@ Visual Object Detect System is a project based on Tensorflow, Keras, YOLOv3, als
 
 
 --------
-##Installation Instrction
-###Test Environment
+## Installation Instrction
+### Test Environment
 	
 Windows 10 1803 + NVIDIA GTX1060 6GB
 Anaconda 4.3.0
@@ -32,7 +32,7 @@ then run
 to see what functions main.py have.
 
 --------
-##Functions Introduction
+## Functions Introduction
     python main.py --help
     
     usage: main.py [-h] [--image] [--input [INPUT]] [--output [OUTPUT]]
@@ -56,5 +56,5 @@ to see what functions main.py have.
             
 remote_server.py can start an online streaming server which sends local camera's video stream to client.
                          
-##Performance Test
+## Performance Test
 Waiting for Further Update...
