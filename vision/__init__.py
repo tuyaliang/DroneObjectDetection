@@ -63,7 +63,7 @@ def detect_video(video_path, output_path=""):
         if not return_value:
             break
         image = Image.fromarray(frame)
-        image = yolo.detect_image(image)
+        image = yolo.detect_image(image,isWeb=False)
         LiveFeed = np.asarray(image)
         curr_time = timer()
         exec_time = curr_time - prev_time
@@ -110,7 +110,7 @@ def detect_camera(cam):
         if not return_value:
             break
         image = Image.fromarray(frame)
-        image = yolo.detect_image(image)
+        image = yolo.detect_image(image,isWeb=False)
         LiveFeed = np.asarray(image)
         curr_time = timer()
         exec_time = curr_time - prev_time
@@ -139,7 +139,7 @@ def detect_img():
             print('Open Error!Check if the image exists and try again!')
             continue
         else:
-            r_image = yolo.detect_image(image)
+            r_image = yolo.detect_image(image,isWeb=False)
             r_image.show()
     yolo.close_session()
 
@@ -328,7 +328,7 @@ class webCamConnect:
                     while bufSize:  # Get Size of image
                         temp_buf = self.socket.recv(bufSize)
                         bufSize -= len(temp_buf)
-                        self.buf += temp_buf  # Get image
+                        self.buf += temp_buf
                         data = numpy.fromstring(self.buf, dtype='uint8')  # Transfer to image array
                         self.image = cv2.imdecode(data, 1)  # Decode
                         Feed = Image.fromarray(self.image)  # YOLOv3 needs image format

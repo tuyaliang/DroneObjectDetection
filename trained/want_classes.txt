@@ -1,0 +1,7 @@
+plane
+car
+truck
+oil truck
+building
+bus
+train

@@ -3,6 +3,9 @@ CAM_NUMBER = 0
 MODEL_PATH = './data/model.h5'
 ANCHORS_PATH = './data/anchors.txt'
 CLASSES_PATH = './data/classes.txt'
+#MODEL_PATH = './trained/trained_weights.h5'
+#ANCHORS_PATH = './trained/yolo_anchors.txt'
+#CLASSES_PATH = './trained/coco_classes.txt'
 # Online stream settings are as below.
 REMOTE_IP = '127.0.0.1'
 RESOLUTION = [1024, 768]

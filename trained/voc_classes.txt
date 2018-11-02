@@ -1,0 +1,5 @@
+aeroplane
+car
+truck
+oil truck
+bus
