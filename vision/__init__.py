@@ -32,7 +32,7 @@ def online_client():
     print("Remote IP and Port: %s:%d" % (cam.remoteAddress[0], cam.remoteAddress[1]))
     try:
         cam.connect()
-        cam.getData(cam.interval)  # 思考interval
+        cam.getData(cam.interval)
     except:
         print("Remote server seems to be shut off!")
 
