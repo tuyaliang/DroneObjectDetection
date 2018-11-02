@@ -1,6 +1,6 @@
 # Visual Object Detect System
 Visual Object Detect System is a project based on Tensorflow, Keras, YOLOv3, also compiling some interesting stuffs such as detecting image on web page and a C/S remote monitor system.
-> Note:This is also my project to participate in the Wuliangchun Cup Competition in Electronics and Information Engineering Sclool of Sichuan University.Thanks to Professor Lei for providing necessary assistance.
+> Note:This is also my project to participate in the Wuliangchun Cup Competition in Electronics and Information Engineering School of Sichuan University.Thanks to Professor Lei for providing necessary assistance.
 
 > Due to the inability to understand the algorithm hidden in YOLOv3, code files in /vision/yolo3 completely come from Keras-yolo3.
 
@@ -10,11 +10,17 @@ Visual Object Detect System is a project based on Tensorflow, Keras, YOLOv3, als
 ### Test Environment
 	
 Windows 10 1803 + NVIDIA GTX1060 6GB
+
 Anaconda 4.3.0
+
 Python 3.5.2
+
 TensorFlow-GPU 1.8.0 (Due to the limit of CPU compute capibility, single image would take 1.5 seconds or so to draw, it's hard to used to process a video.)
+
 Keras 2.2.0
+
 CUDA 9.0.176 (https://developer.nvidia.com/cuda-90-download-archive)
+
 cuDNN 7.3.1.20 (https://developer.nvidia.com/cudnn)
 
 To get the source code, run:
