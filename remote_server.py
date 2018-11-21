@@ -1,6 +1,7 @@
-import socket;
-import threading;
-import struct;
+#coding=utf-8
+import socket
+import threading
+import struct
 import cv2
 import time
 import os
@@ -9,17 +10,17 @@ from settings import *
 
 
 class webCamera:
-    def __init__(self, resolution=RESOLUTION, host=("", REMOTE_PORT)):
-        self.resolution = resolution;
-        self.host = host;
-        self.setSocket(self.host);
+    def __init__(self, resolution=RESOLUTION, host=("", REMOTE_PORT)): #参数初始化
+        self.resolution = resolution
+        self.host = host
+        self.setSocket(self.host)
         self.img_quality = ONLINE_STREAM_QUALITY
 
     def setImageResolution(self, resolution):
-        self.resolution = resolution;
+        self.resolution = resolution
 
     def setHost(self, host):
-        self.host = host;
+        self.host = host
 
     def setSocket(self, host):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
@@ -43,8 +44,8 @@ class webCamera:
     def _processConnection(self, client, addr):
         if (self.recv_config(client) == 0):
             return
-        camera = cv2.VideoCapture(0)
-        encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), self.img_quality]
+        camera = cv2.VideoCapture(CAM_NUMBER)
+        encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), self.img_quality] #压缩参数
 
         f = open("video_log.log", 'a+')
         print("Got connection from %s:%d" % (addr[0], addr[1]), file=f);
@@ -69,7 +70,7 @@ class webCamera:
             else:
                 self.imgdata = cv2.imencode('.jpg', self.img)[1].tostring()
             try:
-                client.send(struct.pack("lhh", len(self.imgdata),
+                client.send(struct.pack("lhh", len(self.imgdata), # 指明struct类型
                                         self.resolution[0], self.resolution[1]) + self.imgdata);
 
             except:
@@ -88,9 +89,9 @@ class webCamera:
 
     def run(self):
         while 1:
-            client, addr = self.socket.accept();
+            client, addr = self.socket.accept()
             clientThread = threading.Thread(target=self._processConnection,
-                                            args=(client, addr,));
+                                            args=(client, addr,))
             clientThread.start()
 
 

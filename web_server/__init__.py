@@ -15,24 +15,20 @@ import cgi
 SERVER_IP = ""
 SERVER_PORT = 23333
 
-# API define
+# API URL
 DETECT_ONLINE_API = "detect/online"
 DETECT_LOCAL_API = "detect/local"
 
-CLASSIFICATION_ONLINE_API = "classification/online"
-CLASSIFICATION_LOCAL_API = "classification/local"
-
-# UA for download online image
+# User-Agent for downloading remote image
 UA = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'}
 
-# cache folder
+#Cache folder
 CACHE_FOLDER = "image_cache"
 
 
-class VisionRequestHandler(SimpleHTTPRequestHandler):
+class Handler(SimpleHTTPRequestHandler):
     def do_POST(self):
-        '''dispatch API requests'''
 
         p = self.path.strip("/")
 
@@ -40,15 +36,10 @@ class VisionRequestHandler(SimpleHTTPRequestHandler):
             self.detect_online()
         elif p == DETECT_LOCAL_API:
             self.detect_local()
-        elif p == CLASSIFICATION_ONLINE_API:
-            self.classification_online()
-        elif p == CLASSIFICATION_LOCAL_API:
-            self.classification_local()
         else:
             self.send_error(404)
 
     def detect_online(self):
-        '''detect online image API'''
         key_value = self.rfile.read(int(self.headers["content-length"])).decode()
 
         name = key_value.split("=")[0]
@@ -84,8 +75,6 @@ class VisionRequestHandler(SimpleHTTPRequestHandler):
         try:
             data = self.rfile.read(int(self.headers["content-length"]))
             data = io.BytesIO(data)
-
-            # need parse the base post info, and pass to cgi.FieldStorage, which can help us to parse the whole post body(with file data)
             content_type = self.headers["content-type"]
             index = content_type.find("boundary=")  # make sure multipart/form-data, we need image data from post body
             if index < 0:
@@ -96,7 +85,7 @@ class VisionRequestHandler(SimpleHTTPRequestHandler):
                                       headers=self.headers, keep_blank_values=True)
 
                 image_data = io.BytesIO(
-                    fs["local_image"].value)  # get the file data, 'local_image' is the element's name in html
+                    fs["local_image"].value)
 
                 # detect with vision module
                 image = Image.open(image_data)
@@ -109,19 +98,9 @@ class VisionRequestHandler(SimpleHTTPRequestHandler):
         except:
             print(traceback.print_exc())
             self.send_error(500, "detect failed for this image!")
-
-    def classification_online(self):
-        '''classification for online image API'''
-        pass
-
-    def classification_local(self):
-        '''classification for local image API'''
-        pass
-
     def send_json(self, detect_results):
         '''send json response to client'''
         '''the format of detect_results:  (image, boxes, scores, classes)'''
-
         image = detect_results[0]
         boxes = detect_results[1]
         scores = detect_results[2]
@@ -179,7 +158,7 @@ def server_start():
         os.makedirs(CACHE_FOLDER)
 
     server_address = (SERVER_IP, SERVER_PORT)
-    server = HTTPServer(server_address, VisionRequestHandler)
+    server = HTTPServer(server_address, Handler)
 
     print("Vision Web Server Started Successfully,Please Visit:http://localhost:" + str(SERVER_PORT) + "/web_app/")
     server.serve_forever()

@@ -63,7 +63,7 @@ def detect_video(video_path, output_path=""):
         if not return_value:
             break
         image = Image.fromarray(frame)
-        image = yolo.detect_image(image,isWeb=False)
+        image = yolo.detect_image(image, isWeb=False)
         LiveFeed = np.asarray(image)
         curr_time = timer()
         exec_time = curr_time - prev_time
@@ -80,7 +80,7 @@ def detect_video(video_path, output_path=""):
         cv2.imshow("LiveFeed", LiveFeed)
         if isOutput:
             out.write(LiveFeed)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(10) == 27:
             break
     yolo.close_session()
 
@@ -110,7 +110,7 @@ def detect_camera(cam):
         if not return_value:
             break
         image = Image.fromarray(frame)
-        image = yolo.detect_image(image,isWeb=False)
+        image = yolo.detect_image(image, isWeb=False)
         LiveFeed = np.asarray(image)
         curr_time = timer()
         exec_time = curr_time - prev_time
@@ -139,7 +139,7 @@ def detect_img():
             print('Open Error!Check if the image exists and try again!')
             continue
         else:
-            r_image = yolo.detect_image(image,isWeb=False)
+            r_image = yolo.detect_image(image, isWeb=False)
             r_image.show()
     yolo.close_session()
 
@@ -294,22 +294,22 @@ class YOLO(object):  # YOLO main class
 class webCamConnect:
     def __init__(self, resolution=RESOLUTION, remoteAddress=(REMOTE_IP,
                                                              REMOTE_PORT), windowName="Online Stream"):
-        self.remoteAddress = remoteAddress;
-        self.resolution = resolution;
-        self.name = windowName;
-        self.mutex = threading.Lock();
+        self.remoteAddress = remoteAddress
+        self.resolution = resolution
+        self.name = windowName
+        self.mutex = threading.Lock()
         self.src = 911 + FPS
         self.interval = 0
         self.path = os.getcwd()
         self.img_quality = ONLINE_STREAM_QUALITY
 
     def _setSocket(self):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
-        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1);
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     def connect(self):
-        self._setSocket();
-        self.socket.connect(self.remoteAddress);
+        self._setSocket()
+        self.socket.connect(self.remoteAddress)
 
     def _processImage(self):
         self.socket.send(struct.pack("lhh", self.src, self.resolution[0], self.resolution[1]))
@@ -318,8 +318,8 @@ class webCamConnect:
         fps = "FPS: ??"
         prev_time = timer()
         while 1:
-            info = struct.unpack("lhh", self.socket.recv(8));
-            bufSize = info[0];
+            info = struct.unpack("lhh", self.socket.recv(8))
+            bufSize = info[0]
             if bufSize:
                 try:
                     self.mutex.acquire()
@@ -347,11 +347,11 @@ class webCamConnect:
                                     color=(255, 0, 0), thickness=2)
                         cv2.namedWindow(self.name, cv2.WINDOW_NORMAL)
                         cv2.imshow(self.name, LiveFeed)  # show image frame by frame
-                #except:
+                # except:
                 #    print("Receive Failure!Check Connection!")
                 #    pass;
                 finally:
-                    self.mutex.release();
+                    self.mutex.release()
                     if cv2.waitKey(10) == 27:
                         self.socket.close()
                         cv2.destroyAllWindows()
@@ -360,35 +360,34 @@ class webCamConnect:
                         break
 
     def getData(self, interval):
-        showThread = threading.Thread(target=self._processImage);
-        showThread.start();
+        showThread = threading.Thread(target=self._processImage)
+        showThread.start()
         if interval != 0:  # 非0则启动保存截图到本地的功能
             saveThread = threading.Thread(target=self._savePicToLocal, args=(interval,
-                                                                             ));
-            saveThread.setDaemon(1);
-            saveThread.start();
+                                                                             ))
+            saveThread.setDaemon(1)
+            saveThread.start()
 
     def setWindowName(self, name):
-        self.name = name;
+        self.name = name
 
     def setRemoteAddress(self, remoteAddress):
-        self.remoteAddress = remoteAddress;
+        self.remoteAddress = remoteAddress
 
     def _savePicToLocal(self, interval):
         while 1:
             try:
-                self.mutex.acquire();
-                path = os.getcwd() + "\\" + "savePic";
+                self.mutex.acquire()
+                path = os.getcwd() + "\\" + "savePic"
                 if not os.path.exists(path):
-                    os.mkdir(path);
+                    os.mkdir(path)
                 cv2.imwrite(path + "\\" + time.strftime("%Y%m%d-%H%M%S",
                                                         time.localtime(time.time())) + ".jpg", self.image)
             except:
-                pass;
+                pass
             finally:
-                self.mutex.release();
-                time.sleep(interval);
+                self.mutex.release()
+                time.sleep(interval)
 
 
-yolo = YOLO()  # first step
-# web video ok     cam ok image ok
+yolo = YOLO()  # initializing yolo

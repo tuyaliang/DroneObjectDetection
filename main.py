@@ -1,3 +1,4 @@
+# coding=utf-8
 import argparse
 
 from vision import detect_video, detect_camera, detect_img, online_client, rtsp
@@ -29,16 +30,16 @@ if __name__ == '__main__':
 
     parser.add_argument(
         '--cam', nargs='?', required=False,
-        help="[Optional] Using camera,by default using built-in camera of laptop,press Esc to stop."
+        help="[Optional] Using camera, by default using built-in camera of laptop,press Esc to stop."
     )
 
     parser.add_argument(
-        '--web', nargs='?', required=False,
-        help="[Optional] Using web server,press Ctrl+C to stop."
+        '--web', default=False, action="store_true", required=False,
+        help="[Optional] Using web server, press Ctrl+C to stop."
     )
 
     parser.add_argument(
-        '--online', nargs='?', required=False,
+        '--online', default=False, action="store_true", required=False,
         help="[Optional] Using a C/S structure system, will start a video stream detecting client. Please run "
              "remote.py on the device with a camera and configure ip and port in settings.py first. Press Esc to stop."
     )
@@ -54,19 +55,20 @@ if __name__ == '__main__':
         Image detection mode, disregard any remaining command line arguments
         """
         print("Image detection mode")
-#        if "input" in FLAGS:
-#            print(" Ignoring remaining command line arguments: " + FLAGS.input + "," + FLAGS.output)
         detect_img()
     elif "cam" in FLAGS:
-        detect_camera(CAM_NUMBER)
-    elif "online" in FLAGS:
+        if FLAGS.cam is None:
+            detect_camera(CAM_NUMBER)
+        else:
+            detect_camera(int(FLAGS.cam))
+    elif FLAGS.input != '':
+        detect_video(FLAGS.input, FLAGS.output)
+    elif FLAGS.online is True:
         online_client()
     elif "rtsp" in FLAGS:
         rtsp(FLAGS.rtsp)
-    elif "web" in FLAGS:
+    elif FLAGS.web is True:
         from web_server import server_start
         server_start()
-    elif "input" in FLAGS:
-        detect_video(FLAGS.input, FLAGS.output)
     else:
         print("Must specify at least video_input_path.  See usage with --help.")

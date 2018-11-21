@@ -1,5 +1,7 @@
-aeroplane
 car
+van
 truck
-oil truck
+tricycle
 bus
+motor
+aircraft

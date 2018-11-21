@@ -1,12 +1,7 @@
-person
-bicycle
 car
-motorbike
-aeroplane
-bus
-train
+van
 truck
-boat
-traffic light
-stop sign
-oil truck
+tricycle
+bus
+motor
+aircraft
