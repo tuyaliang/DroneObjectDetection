@@ -81,11 +81,14 @@ to see what functions main.py have.
 remote_server.py can start an online streaming server which sends local camera's video stream to client.
                          
 ## Performance Test
-
+With little time ,energy and money to test its performance, further tests are welcomed for this project and you can merge your test results branch into mine in any time.
 ## Training Instrction
-Files under tool/ are used to train your own dataset. Considering about that different datasets have different formats of annotations, there are no specific training instructions.
+Files under tool/ are used to train your own dataset. Considering about that different datasets have different formats of annotations, there are only specific training instructions for VOC dataset.For VisDrone2018 Daataset, tools in tool folder will help.
+1.Make sure that there is a VOC2007 format dataset folder named VOCdevkit.
+2.If classes you need are NOT in pre-trained weights, training without weights is your best choice. For training without pre-trained weights, train_barely.py suits your requirements.Adjust epoch and batch_size according to your hardware situation. Too large batch_size could lead to out of memory and too many epoches cause model you train has no robustness.
+3.If classes you need are IN pre-trained weights, please use train.py.
 ## Model Download
 For the offical model training on VOC dataset: https://pjreddie.com/media/files/yolov3.weights
-For my model training on VisDrone dataset: 
+For my model training on VisDrone dataset: (BaiduNetdisk)https://pan.baidu.com/s/1vhSEPMckC7QogL1WdOjWVQ Code：ouvo
 For my training dataset: (BaiduNetdisk)https://pan.baidu.com/s/1QTzy8S7IHSHWtkrFxd100w Code: kdfv
-Considering the requirements of the Competition, I prefer to use VisDrone2018 Dataset instead of VOC dataset.
+Considering the requirements of the Competition, I prefer to use VisDrone2018 Dataset instead of VOC Dataset. 
