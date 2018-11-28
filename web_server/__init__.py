@@ -38,37 +38,7 @@ class Handler(SimpleHTTPRequestHandler):
             self.detect_local()
         else:
             self.send_error(404)
-
-    def detect_online(self):
-        key_value = self.rfile.read(int(self.headers["content-length"])).decode()
-
-        name = key_value.split("=")[0]
-        url = key_value.split("=")[1]
-
-        # only handle the right parameter
-        if name == "online_image_url":
-            try:
-                # download the image from url
-                url = urllib.parse.unquote(url)
-                req = urllib.request.Request(url, headers=UA)
-                data = urllib.request.urlopen(req, timeout=5).read()
-                data = io.BytesIO(data)
-
-                # detect with vision module
-                image = Image.open(data)
-                detect_results = vision.detect_image(image, isWeb=True)
-
-                # send the json result to client
-                self.send_json(detect_results)
-
-                print("detect online image API -> " + url)
-            except:
-                print(traceback.print_exc())
-                self.send_error(500, "detect failed for this image!")
-        else:
-            print("post parameter invalid!")
-            self.send_error(500, "parameter invalid!")
-
+			
     def detect_local(self):
         '''detect local image API'''
 
@@ -98,6 +68,34 @@ class Handler(SimpleHTTPRequestHandler):
         except:
             print(traceback.print_exc())
             self.send_error(500, "detect failed for this image!")
+
+    def detect_online(self):
+        key_value = self.rfile.read(int(self.headers["content-length"])).decode()
+
+        name = key_value.split("=")[0]
+        url = key_value.split("=")[1]
+
+        if name == "online_image_url":
+            try:
+                url = urllib.parse.unquote(url)
+                req = urllib.request.Request(url, headers=UA)
+                data = urllib.request.urlopen(req, timeout=5).read()
+                data = io.BytesIO(data)
+
+                # detect
+                image = Image.open(data)
+                detect_results = vision.detect_image(image, isWeb=True)
+
+                self.send_json(detect_results)
+
+                print("detect online image API -> " + url)
+            except:
+                print(traceback.print_exc())
+                self.send_error(500, "detect failed for this image!")
+        else:
+            print("post parameter invalid!")
+            self.send_error(500, "parameter invalid!")
+
     def send_json(self, detect_results):
         '''send json response to client'''
         '''the format of detect_results:  (image, boxes, scores, classes)'''
@@ -106,7 +104,7 @@ class Handler(SimpleHTTPRequestHandler):
         scores = detect_results[2]
         classes = detect_results[3]
 
-        # save the image result to cache
+        # save to cache
         cache_name = CACHE_FOLDER + "/" + str(uuid.uuid1()) + ".jpg"
         image.save(cache_name)
 

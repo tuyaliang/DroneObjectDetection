@@ -298,7 +298,7 @@ class webCamConnect:
         self.resolution = resolution
         self.name = windowName
         self.mutex = threading.Lock()
-        self.src = 911 + FPS
+        self.src = 911 + FPS  # verification number 911 need to coordinate with server
         self.interval = 0
         self.path = os.getcwd()
         self.img_quality = ONLINE_STREAM_QUALITY
@@ -347,9 +347,9 @@ class webCamConnect:
                                     color=(255, 0, 0), thickness=2)
                         cv2.namedWindow(self.name, cv2.WINDOW_NORMAL)
                         cv2.imshow(self.name, LiveFeed)  # show image frame by frame
-                # except:
-                #    print("Receive Failure!Check Connection!")
-                #    pass;
+                except:
+                    print("Receive Failure!Check Connection!")
+                    pass
                 finally:
                     self.mutex.release()
                     if cv2.waitKey(10) == 27:
@@ -362,7 +362,7 @@ class webCamConnect:
     def getData(self, interval):
         showThread = threading.Thread(target=self._processImage)
         showThread.start()
-        if interval != 0:  # 非0则启动保存截图到本地的功能
+        if interval != 0:  # Need to modify this file to manually start
             saveThread = threading.Thread(target=self._savePicToLocal, args=(interval,
                                                                              ))
             saveThread.setDaemon(1)

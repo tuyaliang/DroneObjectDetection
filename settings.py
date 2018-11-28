@@ -7,7 +7,7 @@ MODEL_PATH = './trained/yolo_60000.h5'
 ANCHORS_PATH = './trained/yolo_anchors.txt'
 CLASSES_PATH = './trained/coco_classes.txt'
 # Online stream settings are as below.
-REMOTE_IP = '192.168.10.241'
+REMOTE_IP = '127.0.0.1'
 RESOLUTION = [1024, 768]
 REMOTE_PORT = 7999
 FPS = 10

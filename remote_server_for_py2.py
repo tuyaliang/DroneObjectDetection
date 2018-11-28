@@ -1,4 +1,5 @@
-#coding=utf-8
+# coding=utf-8
+from __future__ import print_function  # using print function in Python3
 import socket
 import threading
 import struct
@@ -10,7 +11,7 @@ from settings import *
 
 
 class webCamera:
-    def __init__(self, resolution=RESOLUTION, host=("", REMOTE_PORT)): #参数初始化
+    def __init__(self, resolution=RESOLUTION, host=("", REMOTE_PORT)):  # 参数初始化
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.resolution = resolution
         self.host = host
@@ -21,11 +22,11 @@ class webCamera:
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind(self.host)
         self.socket.listen(5)
-        print("Server running on port:%d" % host[1])
+        print("Server is running on port:%d" % host[1])
 
     def recv_config(self, client):
         info = struct.unpack("lhh", client.recv(8))
-        if info[0] > 911:
+        if info[0] > 911:  # add verification to avoid network issues
             self.img_quality = int(info[0]) - 911
             self.resolution = list(self.resolution)
             self.resolution[0] = info[1]
@@ -39,7 +40,7 @@ class webCamera:
         if (self.recv_config(client) == 0):
             return
         camera = cv2.VideoCapture(CAM_NUMBER)
-        encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), self.img_quality] #压缩参数
+        encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), self.img_quality]  # 压缩参数
 
         f = open("video_log.log", 'a+')
         print("Got connection from %s:%d" % (addr[0], addr[1]), file=f)
@@ -56,15 +57,15 @@ class webCamera:
         while 1:
             time.sleep(0.1)
             (grabbed, self.img) = camera.read()
-            self.img = cv2.resize(self.img, self.resolution)  # self.img images
+            self.img = cv2.resize(self.img, self.resolution)  # typehint:self.img images
             if IS_COMPRESSED is True:
                 result, imgencode = cv2.imencode('.jpg', self.img, encode_param)
-                img_code = numpy.array(imgencode)  # imgencode ndarray
-                self.imgdata = img_code.tostring()  # imgdata bytes
+                img_code = numpy.array(imgencode)  # typehint:imgencode ndarray
+                self.imgdata = img_code.tostring()  # typehint:imgdata bytes
             else:
                 self.imgdata = cv2.imencode('.jpg', self.img)[1].tostring()
             try:
-                client.send(struct.pack("lhh", len(self.imgdata), # 指明struct类型
+                client.send(struct.pack("lhh", len(self.imgdata),  # 指明struct类型
                                         self.resolution[0], self.resolution[1]) + self.imgdata)
 
             except:
@@ -90,5 +91,5 @@ class webCamera:
 
 
 if __name__ == "__main__":
-    cam = webCamera()
+    cam = webCamera()  # initializing server
     cam.run()
